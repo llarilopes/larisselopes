@@ -1,4 +1,3 @@
-# larisselopes
 <div align="center">
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:6C3483,50:1A5276,100:0E6655&height=200&section=header&text=Larisse%20Lopes&fontSize=52&fontColor=ffffff&fontAlignY=38&desc=Project%20Leader%20%7C%20Scrum%20Master%20(CSM)%20%7C%20Agile%20PM&descAlignY=58&descSize=18" />
@@ -6,7 +5,7 @@
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-larisselopes-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/larisselopes)
 [![Email](https://img.shields.io/badge/Email-larisselopes%40gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:larisselopes@gmail.com)
 [![Location](https://img.shields.io/badge/Aracaju-SE%2C%20Brasil-1A5276?style=for-the-badge&logo=googlemaps&logoColor=white)](https://www.google.com/maps/place/Aracaju)
-[![CSM](https://img.shields.io/badge/Certified_Scrum_Master-Scrum%20Alliance-F05A28?style=for-the-badge&logo=scrumalliance&logoColor=white)](https://www.scrumalliance.org/)
+[![CSM](https://img.shields.io/badge/Certified_Scrum_Master-Scrum%20Alliance-F05A28?style=for-the-badge&logo=scrumalliance&logoColor=white)](https://www.scrumalliance.org/members/1413973#certifications)
 
 </div>
 
@@ -198,7 +197,7 @@ Gestão de plataforma **link-in-bio** com camada de CRM integrado e analytics de
 
 | Certificação | Emissor | Status |
 |---|---|---|
-| 🥇 **Certified Scrum Master (CSM)** | Scrum Alliance | ✅ Ativa |
+| 🥇 [**Certified Scrum Master (CSM)**](https://www.scrumalliance.org/members/1413973#certifications) | Scrum Alliance | ✅ Ativa |
 | 🤖 **Generative AI Fundamentals** | IBM | ✅ Concluída |
 | 🟢 **Lean Six Sigma Green Belt** | FM2S | ✅ Concluída |
 | 📋 **PMP — Project Management Professional** | PMI | 🔄 Em preparação |
