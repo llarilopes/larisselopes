@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Larisse Lopes — Project Leader</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+:root {
+  --bg: #080810;
+  --surface: #0f0f1a;
+  --surface2: #14141f;
+  --violet: #7B2FFF;
+  --magenta: #D92FBF;
+  --cyan: #2FCCFF;
+  --white: #F0EEFF;
+  --muted: #7070A0;
+  --border: rgba(123,47,255,0.18);
+  --glow: rgba(123,47,255,0.35);
+}
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* SCROLLBAR */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--violet); border-radius: 2px; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  padding: 20px 6vw;
+  display: flex; justify-content: space-between; align-items: center;
+  background: rgba(8,8,16,0.7);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+.nav-logo {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; color: var(--violet);
+  letter-spacing: 0.15em; text-transform: uppercase;
+}
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  font-size: 13px; color: var(--muted); text-decoration: none;
+  letter-spacing: 0.04em; transition: color 0.2s; font-weight: 400;
+}
+.nav-links a:hover { color: var(--white); }
+
+/* CANVAS HERO */
+#hero-canvas {
+  position: absolute; inset: 0; z-index: 0; opacity: 0.6;
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 120px 6vw 140px;
+  position: relative; overflow: hidden;
+}
+
+.hero-gradient {
+  position: absolute; inset: 0; z-index: 0;
+  background: radial-gradient(ellipse 60% 70% at 70% 50%, rgba(123,47,255,0.15) 0%, transparent 70%),
+              radial-gradient(ellipse 40% 50% at 30% 80%, rgba(217,47,191,0.1) 0%, transparent 60%);
+}
+
+.hero-content { position: relative; z-index: 2; max-width: 820px; }
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--cyan); margin-bottom: 28px;
+  padding: 6px 14px;
+  border: 1px solid rgba(47,204,255,0.25);
+  border-radius: 2px;
+  background: rgba(47,204,255,0.05);
+}
+.hero-tag::before { content: ''; width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; animation: pulse 2s infinite; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.hero-name {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(64px, 10vw, 130px);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  margin-bottom: 28px;
+}
+
+.hero-name .line1 { display: block; color: var(--white); }
+.hero-name .line2 {
+  display: block;
+  background: linear-gradient(135deg, var(--violet) 0%, var(--magenta) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-role {
+  font-size: 17px; color: var(--muted); font-weight: 300;
+  max-width: 480px; line-height: 1.6; margin-bottom: 48px;
+  letter-spacing: 0.01em;
+}
+
+.hero-role strong { color: var(--white); font-weight: 500; }
+
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.btn-glow {
+  padding: 14px 30px;
+  background: linear-gradient(135deg, var(--violet), var(--magenta));
+  color: #fff; font-size: 14px; font-weight: 500;
+  text-decoration: none; letter-spacing: 0.04em;
+  border-radius: 3px;
+  box-shadow: 0 0 32px rgba(123,47,255,0.4);
+  transition: box-shadow 0.3s, transform 0.2s;
+  display: inline-block;
+}
+.btn-glow:hover { box-shadow: 0 0 48px rgba(123,47,255,0.65); transform: translateY(-2px); }
+
+.btn-ghost {
+  padding: 13px 30px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--white); font-size: 14px; font-weight: 400;
+  text-decoration: none; letter-spacing: 0.04em;
+  border-radius: 3px;
+  transition: border-color 0.2s, background 0.2s;
+  display: inline-block;
+}
+.btn-ghost:hover { border-color: var(--violet); background: rgba(123,47,255,0.08); }
+
+.hero-scroll {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  pointer-events: none;
+}
+.hero-scroll span { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: var(--muted); text-transform: uppercase; opacity: 0.5; }
+@media (max-width: 768px) { .hero-scroll { display: none; } }
+.scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--violet), transparent); animation: scrollDown 2s infinite; }
+@keyframes scrollDown { 0% { opacity: 0; transform: scaleY(0); transform-origin: top; } 50% { opacity: 1; transform: scaleY(1); } 100% { opacity: 0; transform: scaleY(1); transform-origin: bottom; } }
+
+/* METRICS TICKER */
+.ticker {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden; padding: 16px 0;
+}
+.ticker-inner {
+  display: flex; gap: 64px; width: max-content;
+  animation: ticker 22s linear infinite;
+}
+.ticker-inner:hover { animation-play-state: paused; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ticker-item {
+  display: flex; align-items: center; gap: 10px;
+  white-space: nowrap; font-size: 13px; color: var(--muted);
+  font-family: 'Space Mono', monospace; letter-spacing: 0.06em;
+}
+.ticker-item .num { color: var(--violet); font-weight: 700; font-size: 15px; }
+.ticker-sep { color: var(--border); }
+
+/* SECTIONS */
+.section { padding: 100px 6vw; }
+.section-head { margin-bottom: 64px; }
+.section-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--violet); margin-bottom: 16px; display: block;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 700; line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.section-title span {
+  background: linear-gradient(135deg, var(--violet), var(--magenta));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* TOOLS SECTION */
+.tools-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1px; background: var(--border);
+  margin-top: 56px;
+}
+
+.tool-card {
+  background: var(--surface);
+  padding: 36px 32px;
+  transition: background 0.3s;
+  position: relative; overflow: hidden;
+}
+.tool-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--violet), var(--magenta));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.tool-card:hover::before { transform: scaleX(1); }
+.tool-card:hover { background: var(--surface2); }
+
+.tool-category {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--violet); margin-bottom: 14px;
+}
+.tool-name {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px; font-weight: 600; margin-bottom: 10px; color: var(--white);
+}
+.tool-desc { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 20px; }
+.tool-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tool-tag {
+  font-size: 11px; padding: 4px 10px;
+  border: 1px solid var(--border);
+  color: var(--muted); border-radius: 2px;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.05em;
+  transition: border-color 0.2s, color 0.2s;
+}
+.tool-card:hover .tool-tag { border-color: rgba(123,47,255,0.35); color: var(--white); }
+
+/* PROJECTS */
+.projects-section { background: var(--bg); }
+
+.project-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); margin-top: 56px; }
+
+.project-item {
+  background: var(--bg);
+  padding: 48px 40px;
+  display: grid; grid-template-columns: 200px 1fr; gap: 48px;
+  cursor: default;
+  transition: background 0.3s;
+  position: relative; overflow: hidden;
+}
+.project-item::after {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: linear-gradient(to bottom, var(--violet), var(--magenta));
+  transform: scaleY(0); transform-origin: top; transition: transform 0.4s ease;
+}
+.project-item:hover::after { transform: scaleY(1); }
+.project-item:hover { background: var(--surface); }
+
+.project-meta { padding-top: 4px; }
+.project-co {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--violet); margin-bottom: 6px;
+}
+.project-period { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+.project-badge {
+  display: inline-block; padding: 4px 10px;
+  font-family: 'Space Mono', monospace; font-size: 9px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  border-radius: 2px;
+}
+.project-badge.active { background: rgba(47,204,255,0.12); color: var(--cyan); }
+.project-badge.done { background: rgba(123,47,255,0.12); color: var(--violet); }
+
+.project-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(22px, 3vw, 28px); font-weight: 700;
+  margin-bottom: 12px; color: var(--white); line-height: 1.15;
+}
+.project-desc { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 20px; font-weight: 300; }
+
+.project-points { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.project-points li {
+  font-size: 14px; color: rgba(240,238,255,0.75);
+  padding-left: 20px; position: relative; line-height: 1.5;
+}
+.project-points li::before {
+  content: ''; position: absolute; left: 0; top: 9px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--violet), var(--magenta));
+}
+
+.metric-row {
+  display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px;
+}
+.metric-chip {
+  padding: 8px 16px;
+  background: rgba(123,47,255,0.1); border: 1px solid rgba(123,47,255,0.25);
+  border-radius: 2px; font-family: 'Space Mono', monospace;
+  font-size: 11px; color: var(--white); letter-spacing: 0.06em;
+}
+.metric-chip strong { color: var(--magenta); font-size: 13px; margin-right: 4px; }
+
+/* CREDENTIALS */
+.cred-section { background: var(--surface); border-top: 1px solid var(--border); }
+
+.cred-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; margin-top: 56px;
+}
+
+.cred-list { display: flex; flex-direction: column; gap: 0; }
+.cred-item {
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+  transition: padding-left 0.2s;
+}
+.cred-item:hover { padding-left: 8px; }
+.cred-text {}
+.cred-name { font-size: 14px; font-weight: 500; color: var(--white); margin-bottom: 3px; }
+.cred-inst { font-size: 12px; color: var(--muted); }
+.cred-year {
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  color: var(--violet); white-space: nowrap; flex-shrink: 0;
+}
+
+.cert-list { display: flex; flex-direction: column; gap: 0; }
+.cert-item {
+  padding: 18px 0; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 16px;
+  transition: padding-left 0.2s;
+}
+.cert-item:hover { padding-left: 8px; }
+.cert-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--violet), var(--magenta));
+  box-shadow: 0 0 8px var(--glow);
+}
+.cert-dot.pending { background: transparent; border: 1.5px solid var(--muted); box-shadow: none; }
+.cert-info { flex: 1; }
+.cert-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+.cert-by { font-size: 12px; color: var(--muted); }
+.cert-status { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; }
+.cert-status.ok { color: var(--cyan); }
+.cert-status.pend { color: var(--muted); }
+
+.langs { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 36px; }
+.lang-pill {
+  padding: 8px 18px; border: 1px solid var(--border);
+  font-size: 13px; color: var(--muted); border-radius: 2px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.lang-pill:hover { border-color: var(--violet); color: var(--white); }
+
+/* CONTACT */
+.contact-section {
+  padding: 120px 6vw;
+  text-align: center;
+  background: var(--bg);
+  position: relative; overflow: hidden;
+}
+.contact-section::before {
+  content: '';
+  position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(123,47,255,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.contact-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(40px, 6vw, 72px); font-weight: 800;
+  line-height: 1; letter-spacing: -0.03em; margin-bottom: 20px;
+}
+.contact-sub { font-size: 16px; color: var(--muted); font-weight: 300; margin-bottom: 52px; max-width: 400px; margin-left: auto; margin-right: auto; }
+.contact-links { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+.contact-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 28px; border: 1px solid var(--border);
+  color: var(--white); text-decoration: none; font-size: 14px;
+  border-radius: 3px; transition: all 0.25s; letter-spacing: 0.03em;
+}
+.contact-link:hover {
+  border-color: var(--violet);
+  background: rgba(123,47,255,0.12);
+  box-shadow: 0 0 20px rgba(123,47,255,0.2);
+  transform: translateY(-2px);
+}
+.contact-link svg { opacity: 0.7; }
+.contact-link:hover svg { opacity: 1; }
+
+/* FOOTER */
+footer {
+  padding: 24px 6vw;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--border);
+  font-family: 'Space Mono', monospace; font-size: 11px;
+  color: var(--muted); letter-spacing: 0.08em;
+}
+
+/* SCROLL REVEAL */
+.reveal {
+  opacity: 0; transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .project-item { grid-template-columns: 1fr; gap: 16px; }
+  .cred-grid { grid-template-columns: 1fr; gap: 40px; }
+  footer { flex-direction: column; gap: 6px; text-align: center; }
+  .hero-name { font-size: clamp(52px, 14vw, 80px); }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">LL // Portfolio</div>
+  <ul class="nav-links">
+    <li><a href="#tools">Ferramentas</a></li>
+    <li><a href="#projects">Projetos</a></li>
+    <li><a href="#credentials">Formação</a></li>
+    <li><a href="#contact">Contato</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-gradient"></div>
+  <div class="hero-content">
+    <div class="hero-tag">CSM Scrum Alliance · Disponível para novas oportunidades</div>
+    <h1 class="hero-name">
+      <span class="line1">Larisse</span>
+      <span class="line2">Lopes.</span>
+    </h1>
+    <p class="hero-role">
+      <strong>Project Leader &amp; Scrum Master</strong> certificada pela <strong>Scrum Alliance (CSM)</strong> com 8 anos conectando times, tecnologia e resultados reais.
+      Do discovery ao go-live, com métricas que comprovam entrega de valor.
+    </p>
+    <a href="https://www.scrumalliance.org/members/1413973" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;margin-bottom:36px;padding:10px 18px;border:1px solid rgba(123,47,255,0.35);border-radius:3px;background:rgba(123,47,255,0.08);max-width:100%;text-decoration:none;transition:border-color 0.2s,background 0.2s,box-shadow 0.2s;" onmouseover="this.style.borderColor='rgba(123,47,255,0.7)';this.style.boxShadow='0 0 20px rgba(123,47,255,0.25)'" onmouseout="this.style.borderColor='rgba(123,47,255,0.35)';this.style.boxShadow='none'">
+      <span style="font-size:20px">🏅</span>
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#F0EEFF;letter-spacing:0.03em">Certified Scrum Master (CSM)</div>
+        <div style="font-family:'Space Mono',monospace;font-size:10px;color:var(--violet);letter-spacing:0.1em;text-transform:uppercase">Scrum Alliance · Ver certificação ↗</div>
+      </div>
+    </a>
+    <br>
+    <div class="hero-actions">
+      <a href="https://llarilopes.github.io/larisselopes#projects" class="btn-glow">Ver projetos</a>
+      <a href="https://www.linkedin.com/in/larisselopes" target="_blank" rel="noopener" class="btn-ghost">LinkedIn</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-item"><span class="num">8+</span> anos de experiência <span class="ticker-sep">/</span></div>
+    <div class="ticker-item"><span class="num">25x</span> mais rápido no planejamento de rotas <span class="ticker-sep">/</span></div>
+    <div class="ticker-item"><span class="num">+43%</span> eficiência de rotas MatrixCargo <span class="ticker-sep">/</span></div>
+    <div class="ticker-item"><span class="num">54h → 7s</span> comprovação de entrega <span class="ticker-sep">/</span></div>
+    <div class="ticker-item"><span class="num">CSM</span> Scrum Alliance Certified <span class="ticker-sep">/</span></div>
+    <div class="ticker-item"><span class="num">3</span> pós-graduações concluídas <span class="ticker-sep">/</span></div>
+    <div class="ticker-item"><span class="num">8+</span> anos de experiência <span class="ticker-sep">/</span></div>
+    <div class="ticker-item"><span class="num">25x</span> mais rápido no planejamento de rotas <span class="ticker-sep">/</span></div>
+    <div class="ticker-item"><span class="num">+43%</span> eficiência de rotas MatrixCargo <span class="ticker-sep">/</span></div>
+    <div class="ticker-item"><span class="num">54h → 7s</span> comprovação de entrega <span class="ticker-sep">/</span></div>
+    <div class="ticker-item"><span class="num">CSM</span> Scrum Alliance Certified <span class="ticker-sep">/</span></div>
+    <div class="ticker-item"><span class="num">3</span> pós-graduações concluídas <span class="ticker-sep">/</span></div>
+  </div>
+</div>
+
+<!-- TOOLS -->
+<section class="section tools-section" id="tools">
+  <div class="section-head reveal">
+    <span class="section-eyebrow">Stack</span>
+    <h2 class="section-title">Competências &amp; <span>Ferramentas</span></h2>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card reveal reveal-delay-1">
+      <div class="tool-category">Metodologias</div>
+      <div class="tool-name">Gestão Ágil</div>
+      <div class="tool-desc">Facilitação completa de cerimônias Scrum, gestão de backlog e sprints, métricas de fluxo para previsibilidade operacional.</div>
+      <div class="tool-tags">
+        <span class="tool-tag">Scrum</span>
+        <span class="tool-tag">Kanban</span>
+        <span class="tool-tag">SAFe</span>
+        <span class="tool-tag">Lean</span>
+        <span class="tool-tag">Six Sigma</span>
+      </div>
+    </div>
+    <div class="tool-card reveal reveal-delay-2">
+      <div class="tool-category">Plataformas</div>
+      <div class="tool-name">Gestão de Projetos</div>
+      <div class="tool-desc">Domínio das principais ferramentas de planejamento, rastreamento e colaboração em times distribuídos.</div>
+      <div class="tool-tags">
+        <span class="tool-tag">Jira</span>
+        <span class="tool-tag">Azure DevOps</span>
+        <span class="tool-tag">Confluence</span>
+        <span class="tool-tag">Notion</span>
+        <span class="tool-tag">Miro</span>
+      </div>
+    </div>
+    <div class="tool-card reveal reveal-delay-3">
+      <div class="tool-category">Design & Produto</div>
+      <div class="tool-name">Discovery &amp; UX</div>
+      <div class="tool-desc">Product discovery, roadmaps orientados a OKRs, gestão de stakeholders e colaboração com design para definição de soluções.</div>
+      <div class="tool-tags">
+        <span class="tool-tag">Figma</span>
+        <span class="tool-tag">Miro</span>
+        <span class="tool-tag">OKRs</span>
+        <span class="tool-tag">Roadmap</span>
+      </div>
+    </div>
+    <div class="tool-card reveal reveal-delay-1">
+      <div class="tool-category">Domínios Técnicos</div>
+      <div class="tool-name">Setores &amp; Sistemas</div>
+      <div class="tool-desc">Projetos em logística, seguros, indústria têxtil, MarTech, SST e sistemas de compliance com eSocial e TOTVS.</div>
+      <div class="tool-tags">
+        <span class="tool-tag">ERP TOTVS</span>
+        <span class="tool-tag">eSocial SST</span>
+        <span class="tool-tag">APIs REST</span>
+        <span class="tool-tag">IA Aplicada</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="section projects-section" id="projects">
+  <div class="section-head reveal">
+    <span class="section-eyebrow">Experiência</span>
+    <h2 class="section-title">Projetos <span>entregues</span></h2>
+  </div>
+  <div class="project-list">
+
+    <div class="project-item reveal">
+      <div class="project-meta">
+        <div class="project-co">CRP Tecnologia</div>
+        <div class="project-period">Fev/2026 — Atual</div>
+        <div class="project-badge active">Em andamento</div>
+      </div>
+      <div>
+        <div class="project-title">Portfólio SEDU/ES — Secretaria de Educação do Espírito Santo</div>
+        <div class="project-desc">Liderança de múltiplos sistemas críticos da rede pública estadual de ensino do ES, atendendo escolas, professores, gestores e superintendências regionais em todo o estado.</div>
+        <ul class="project-points">
+          <li>SIGEST e SEGES — gestão escolar, matrículas e vida acadêmica dos estudantes da rede estadual</li>
+          <li>SGF — gestão de formações e inscrições de professores e servidores da educação</li>
+          <li>SISPC — prestação de contas dos recursos financeiros repassados às escolas públicas</li>
+          <li>SGTER, E-GESTÃO e PGP — sistemas de gestão administrativa, terceirizados e pedagógica</li>
+          <li>SEMPRE NOVA, ALIMENTAÇÃO e QUESTÕES — sistemas de apoio à operação escolar e avaliação</li>
+          <li>Facilitação de cerimônias Scrum, gestão de backlog e interface com stakeholders da SEDU</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-item reveal">
+      <div class="project-meta">
+        <div class="project-co">Ateliware</div>
+        <div class="project-period">Out/2023 — Jul/2024</div>
+        <div class="project-badge done">Concluído</div>
+      </div>
+      <div>
+        <div class="project-title">MatrixCargo — IA em Logística</div>
+        <div class="project-desc">SaaS de gerenciamento de fretes com Inteligência Artificial para otimização de rotas e frotas. Produto construído do zero em ambiente de alta complexidade técnica e operacional.</div>
+        <ul class="project-points">
+          <li>Facilitação do Product Discovery e refinamentos contínuos do backlog</li>
+          <li>Integração entre UX, engenharia e negócio desde o MVP</li>
+          <li>Monitoramento de métricas de fluxo e decisões orientadas a dados</li>
+        </ul>
+        <div class="metric-row">
+          <div class="metric-chip"><strong>25x</strong> planejamento mais rápido</div>
+          <div class="metric-chip"><strong>+43%</strong> eficiência de rotas</div>
+          <div class="metric-chip"><strong>+18,5%</strong> produtividade da frota</div>
+          <div class="metric-chip"><strong>54h → 7s</strong> comprovação de entrega</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-item reveal">
+      <div class="project-meta">
+        <div class="project-co">Ubicua Cloud</div>
+        <div class="project-period">Jul/2024 — Ago/2025</div>
+        <div class="project-badge done">Concluído</div>
+      </div>
+      <div>
+        <div class="project-title">Lorsa Jeans — ERP TOTVS na Indústria Têxtil</div>
+        <div class="project-desc">Substituição de processos manuais por sistema web integrado ao ERP TOTVS em indústria têxtil com operação complexa e alto volume de documentos fiscais.</div>
+        <ul class="project-points">
+          <li>Módulo financeiro com automação de contas e conciliações bancárias</li>
+          <li>Emissão fiscal de NFe e NFCe com rastreabilidade de documentos</li>
+          <li>Rastreabilidade produtiva do corte ao acabamento final</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-item reveal">
+      <div class="project-meta">
+        <div class="project-co">Ubicua Cloud</div>
+        <div class="project-period">Jul/2024 — Ago/2025</div>
+        <div class="project-badge done">Concluído</div>
+      </div>
+      <div>
+        <div class="project-title">Resolve Assist — Hub Digital para Seguradoras</div>
+        <div class="project-desc">Plataforma B2B conectando seguradoras e prestadores de serviços com foco em sinistros e acionamentos, integrando múltiplos parceiros via APIs.</div>
+        <ul class="project-points">
+          <li>Otimização do fluxo operacional de acionamentos e sinistros</li>
+          <li>Integração entre múltiplos parceiros via APIs</li>
+          <li>Melhoria da experiência do segurado em todas as etapas do processo</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-item reveal">
+      <div class="project-meta">
+        <div class="project-co">Software Zênit</div>
+        <div class="project-period">Mai/2022 — Ago/2023</div>
+        <div class="project-badge done">Concluído</div>
+      </div>
+      <div>
+        <div class="project-title">Sistema SST — Saúde e Segurança no Trabalho</div>
+        <div class="project-desc">Sistema web com conformidade às Normas Regulamentadoras e integração com eSocial SST e Receita Federal para eventos eletrônicos de SST.</div>
+        <ul class="project-points">
+          <li>Conformidade com NRs e integração direta com eSocial SST</li>
+          <li>Integração com a Receita Federal para envio de eventos eletrônicos</li>
+          <li>Rastreabilidade de exames, laudos, EPIs e documentos ocupacionais</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="project-item reveal">
+      <div class="project-meta">
+        <div class="project-co">Mr. Goose Group</div>
+        <div class="project-period">Jun/2017 — Mai/2022</div>
+        <div class="project-badge done">Concluído</div>
+      </div>
+      <div>
+        <div class="project-title">Plataforma Link-in-Bio com CRM e Analytics</div>
+        <div class="project-desc">Produto digital white-label para criadores de conteúdo com CRM integrado, analytics de engajamento e monetização. Apoio ao PO em roadmaps orientados por valor.</div>
+        <ul class="project-points">
+          <li>Apoio ao PO na priorização orientada por valor e definição de roadmaps</li>
+          <li>Condução de testes com usuários e acompanhamento de métricas de engajamento</li>
+          <li>Alinhamento entre stakeholders técnicos e de negócio em múltiplos times</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CREDENTIALS -->
+<section class="section cred-section" id="credentials">
+  <div class="section-head reveal">
+    <span class="section-eyebrow">Formação</span>
+    <h2 class="section-title">Credenciais &amp; <span>Certificações</span></h2>
+  </div>
+  <div class="cred-grid">
+    <div class="reveal">
+      <p style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:24px">Formação Acadêmica</p>
+      <div class="cred-list">
+        <div class="cred-item">
+          <div class="cred-text">
+            <div class="cred-name">Pós em Ciência de Dados e Inteligência Artificial</div>
+            <div class="cred-inst">UNINTER</div>
+          </div>
+          <div class="cred-year">2024</div>
+        </div>
+        <div class="cred-item">
+          <div class="cred-text">
+            <div class="cred-name">Pós em Gestão de Projetos Ágeis</div>
+            <div class="cred-inst">UNINTER</div>
+          </div>
+          <div class="cred-year">2024</div>
+        </div>
+        <div class="cred-item">
+          <div class="cred-text">
+            <div class="cred-name">Pós em Gestão Estratégica de Negócios</div>
+            <div class="cred-inst">UNIFAEL</div>
+          </div>
+          <div class="cred-year">2017</div>
+        </div>
+        <div class="cred-item">
+          <div class="cred-text">
+            <div class="cred-name">Bacharelado em Administração</div>
+            <div class="cred-inst">BILAC</div>
+          </div>
+          <div class="cred-year">2013</div>
+        </div>
+        <div class="cred-item">
+          <div class="cred-text">
+            <div class="cred-name">Tecnólogo em Sistemas da Informação</div>
+            <div class="cred-inst">UNIBTA</div>
+          </div>
+          <div class="cred-year">2005</div>
+        </div>
+      </div>
+      <div class="langs">
+        <div class="lang-pill">🇧🇷 Português — Nativo</div>
+        <div class="lang-pill">🇺🇸 Inglês — Intermediário</div>
+        <div class="lang-pill">🇪🇸 Espanhol — Intermediário</div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-2">
+      <p style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:24px">Certificações</p>
+      <div class="cert-list">
+        <div class="cert-item" style="border:1px solid rgba(123,47,255,0.35);border-radius:4px;padding:14px 16px;background:rgba(123,47,255,0.07);margin-bottom:4px;">
+          <div class="cert-dot" style="background:linear-gradient(135deg,#7B2FFF,#D92FBF);box-shadow:0 0 12px rgba(123,47,255,0.6);width:10px;height:10px;"></div>
+          <div class="cert-info">
+            <div class="cert-name" style="font-size:15px;font-weight:700;color:#F0EEFF">Certified Scrum Master (CSM)</div>
+            <div class="cert-by" style="font-size:12px;color:var(--violet);font-weight:500">Scrum Alliance</div>
+          </div>
+          <div class="cert-status ok" style="font-size:10px;background:rgba(47,204,255,0.12);padding:4px 10px;border-radius:2px;color:var(--cyan)">Ativa</div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-dot"></div>
+          <div class="cert-info">
+            <div class="cert-name">Generative AI Fundamentals</div>
+            <div class="cert-by">IBM</div>
+          </div>
+          <div class="cert-status ok">Concluída</div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-dot"></div>
+          <div class="cert-info">
+            <div class="cert-name">Lean Six Sigma Green Belt</div>
+            <div class="cert-by">FM2S</div>
+          </div>
+          <div class="cert-status ok">Concluída</div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-dot"></div>
+          <div class="cert-info">
+            <div class="cert-name">Excel Avançado</div>
+            <div class="cert-by">Fundação Bradesco</div>
+          </div>
+          <div class="cert-status ok">Concluída</div>
+        </div>
+        <div class="cert-item">
+          <div class="cert-dot pending"></div>
+          <div class="cert-info">
+            <div class="cert-name">PMP — Project Management Professional</div>
+            <div class="cert-by">PMI</div>
+          </div>
+          <div class="cert-status pend">Em preparação</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <h2 class="contact-title reveal">Vamos <br><span style="background:linear-gradient(135deg,var(--violet),var(--magenta));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">trabalhar</span><br>juntos?</h2>
+  <p class="contact-sub reveal reveal-delay-1">Aberta a oportunidades em liderança de projetos, squads ágeis e transformação digital.</p>
+  <div class="contact-links reveal reveal-delay-2">
+    <a href="https://www.linkedin.com/in/larisselopes" target="_blank" rel="noopener" class="contact-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+      LinkedIn
+    </a>
+    <a href="mailto:larisselopes@gmail.com" class="contact-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      larisselopes@gmail.com
+    </a>
+    <a href="https://wa.me/5579981393991" target="_blank" class="contact-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.998 2.003a9.997 9.997 0 00-8.638 14.985L2 22l5.139-1.348A9.993 9.993 0 0011.998 22c5.523 0 10-4.477 10-9.999 0-5.523-4.477-9.998-10-9.998z"/></svg>
+      WhatsApp
+    </a>
+    <a href="https://github.com/llarilopes" target="_blank" class="contact-link">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      GitHub
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Larisse Lopes</span>
+  <span>Aracaju // SE // Brasil</span>
+</footer>
+
+<script>
+// PARTICLE CANVAS
+const canvas = document.getElementById('hero-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+let animFrame;
+
+function resize() {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
+
+function createParticles() {
+  particles = [];
+  const count = Math.floor((canvas.width * canvas.height) / 14000);
+  for (let i = 0; i < count; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.5 + 0.3,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      color: Math.random() > 0.5 ? '#7B2FFF' : '#D92FBF',
+      alpha: Math.random() * 0.6 + 0.1
+    });
+  }
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.alpha;
+    ctx.fill();
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = canvas.width;
+    if (p.x > canvas.width) p.x = 0;
+    if (p.y < 0) p.y = canvas.height;
+    if (p.y > canvas.height) p.y = 0;
+  });
+  // Draw connections
+  ctx.globalAlpha = 1;
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 100) {
+        ctx.beginPath();
+        ctx.strokeStyle = '#7B2FFF';
+        ctx.globalAlpha = (1 - dist/100) * 0.12;
+        ctx.lineWidth = 0.5;
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
+  animFrame = requestAnimationFrame(drawParticles);
+}
+
+window.addEventListener('resize', () => { resize(); createParticles(); });
+resize(); createParticles(); drawParticles();
+
+// SCROLL REVEAL
+const reveals = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.12 });
+reveals.forEach(el => observer.observe(el));
+
+// NAV HIGHLIGHT ON SCROLL
+const sections = document.querySelectorAll('section[id], div[id]');
+window.addEventListener('scroll', () => {
+  const pos = window.scrollY + 100;
+  sections.forEach(sec => {
+    const link = document.querySelector(`.nav-links a[href="#${sec.id}"]`);
+    if (!link) return;
+    if (sec.offsetTop <= pos && sec.offsetTop + sec.offsetHeight > pos) {
+      document.querySelectorAll('.nav-links a').forEach(a => a.style.color = '');
+      link.style.color = '#F0EEFF';
+    }
+  });
+});
+</script>
+</body>
+</html>
